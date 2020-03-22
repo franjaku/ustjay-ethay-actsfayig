@@ -1,7 +1,7 @@
 import os
 
 import requests
-from flask import Flask, send_file, Response
+from flask import Flask, render_template
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
@@ -26,9 +26,16 @@ def home():
                              data={"input_text": fact})
 
     url = response.headers['Location']
+    r = requests.get(url)
+    riter = r.iter_lines()
+    lines = [line for line in riter]
 
+    data = {"fact": fact,
+            "pig_latin": lines[8].decode('utf-8'),
+            "URL": url}
 
-    return url
+    return render_template('home.jinja2', **data)
+    # return render_template('home.jinja2', fact=fact, pig_latin=lines[8].decode('utf-8'), URL=url)
 
 
 if __name__ == "__main__":
