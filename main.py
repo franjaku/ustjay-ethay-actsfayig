@@ -27,15 +27,13 @@ def home():
 
     url = response.headers['Location']
     r = requests.get(url)
-    riter = r.iter_lines()
-    lines = [line for line in riter]
-
+    soup = BeautifulSoup(r.content, "html.parser")
+    pig_latin = soup.getText().strip('\n').split('\n')[-1]
     data = {"fact": fact,
-            "pig_latin": lines[8].decode('utf-8'),
+            "pig_latin": pig_latin,
             "URL": url}
 
     return render_template('home.jinja2', **data)
-    # return render_template('home.jinja2', fact=fact, pig_latin=lines[8].decode('utf-8'), URL=url)
 
 
 if __name__ == "__main__":
